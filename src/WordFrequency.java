@@ -1,22 +1,22 @@
 public class WordFrequency{
     private  String word;
-    private int counter;
+    private int frequency;
 
-    WordFrequency(String word,int counter){
+    WordFrequency(String word,int frequency){
         this.word=word;
-        this.counter=counter;
+        this.frequency=frequency;
     }
 
     public void setWord(String word){this.word=word;}
 
-    public void setCounter(int counter){this.counter=counter;}
+    public void setFrequency(int frequency){this.frequency=frequency;}
 
     public String key(){return word;}
 
-    public int getCounter(){return counter;}
+    public int getFrequency(){return frequency;}
 
     public String toString(){
-        return "word: " + word + " counter: " + Integer.toString(counter);
+        return "word: " + word + " frequency: " + Integer.toString(frequency);
     }
 
 

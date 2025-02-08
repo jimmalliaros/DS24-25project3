@@ -1,3 +1,7 @@
+import java.util.List;
+import java.util.ArrayList;
+
+
 public class BST implements WordCounter{
     private class TreeNode{
         WordFrequency item;
@@ -19,6 +23,13 @@ public class BST implements WordCounter{
         }
 
 
-
     }
+
+    private TreeNode head;
+    private List stopWords;
+
+
+
+
+
 }
