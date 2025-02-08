@@ -108,6 +108,24 @@ public class BST implements WordCounter{
         return NumDistinctWords;
     }
 
+    public int getFrequency(String w){
+
+        TreeNode current=root;
+
+        while(true){
+            if(current==null)
+                return 0;
+            if(current.getItem().key().equals(w))
+                return current.getItem().getFrequency();
+
+            if(current.getItem().key().compare(w)<0)
+                current=current.getRight();
+            else
+                current=current.getLeft();
+        }
+
+    }
+
     public void addStopWord(String w){
         stopWords.add(w);
     }
