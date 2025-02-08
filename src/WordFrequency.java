@@ -15,6 +15,7 @@ public class WordFrequency{
 
     public int getFrequency(){return frequency;}
 
+    public void incrementFrequency(){frequency++;}
     public String toString(){
         return "word: " + word + " frequency: " + Integer.toString(frequency);
     }
