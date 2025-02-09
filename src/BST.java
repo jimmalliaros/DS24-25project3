@@ -148,6 +148,28 @@ public class BST implements WordCounter{
 
     }
 
+    public double getMeanFrequency(){
+
+        Stack<TreeNode> stack=new Stack<>();
+        TreeNode current=root;
+        int sum=0;
+
+        while(current!=null || !stack.isEmpty()){
+            while(current!=null){
+                stack.push(current);
+                current=current.getLeft();
+            }
+
+            current=stack.pop();
+            sum+=current.getItem().getFrequency();
+            current.current.getRight();
+        }
+
+        double result= sum * 1.0 /getNumDistinctWords();
+
+        return result;
+    }
+
 
 
 
@@ -166,6 +188,8 @@ public class BST implements WordCounter{
     public void removeStopWrod(String w){
         stopWords.remove(w);
     }
+
+    private  static TreeNode
 
 
 
