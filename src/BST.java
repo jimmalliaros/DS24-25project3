@@ -1,5 +1,6 @@
 import java.util.List;
 import java.util.LinkedList;
+import  java.util.Stack;
 
 
 public class BST implements WordCounter{
@@ -124,6 +125,38 @@ public class BST implements WordCounter{
                 current=current.getLeft();
         }
 
+    }
+
+    public WordFrequency getMaxFrequency() {
+
+        Stack<TreeNode> stack =new Stack<>();
+        TreeNode current=root;
+        int max=-1;
+
+        while(current!=null || !stack.isEmpty()){
+            while(current!=null){
+                stack.push(current);
+                current=current.getLeft();
+            }
+
+            current=stack.pop();
+            if(current.getItem().getFrequency()>max){
+                max=current.getItem().getFrequency();
+            }
+            current.current.getRight();
+        }
+
+    }
+
+
+
+
+
+
+
+
+    public void printTreeByWord(PrintStream stream){
+        if()
     }
 
     public void addStopWord(String w){
