@@ -1,3 +1,5 @@
+import  java.util.Comparator;
+
 public class ComparatorWordFrequency implements  Comparator<WordFrequency>{
 
     public int compare(WordFrequency wf1,WordFrequency wf2){

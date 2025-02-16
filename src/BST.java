@@ -1,9 +1,15 @@
 import java.util.List;
 import java.util.LinkedList;
 import  java.util.Stack;
+import  java.io.PrintStream;
+import  java.util.Scanner;
+import  java.io.File;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.io.FileNotFoundException;
 
 
-public class BST implements WordCounter{
+public class BST /*implements WordCounter*/{
     private class TreeNode{
         WordFrequency item;
         TreeNode left;
@@ -14,12 +20,15 @@ public class BST implements WordCounter{
             this.item=item;
         }
 
+        public void setRight(TreeNode right){this.right=right;}
+        public void setLeft(TreeNode left){this.left=left;}
+
         TreeNode getRight(){return right;}
 
         TreeNode getLeft(){return left;}
 
         WordFrequency getItem(){return item;}
-        String toString(){
+        public String toString(){
             return "Item: " + item.toString() + " size of subtree: " + Integer.toString(subtreeSize);
 
         }
@@ -28,20 +37,20 @@ public class BST implements WordCounter{
     }
 
     private TreeNode head;
-    private List stopWords ;
-    private NumDistinctWords=0;
+    private List<String> stopWords =new LinkedList<String>();
+    private int NumDistinctWords=0;
 
     private ComparatorWordFrequency comparator;
 
-    stopWords=new LinkedList<String>();
+
 
 
     public void insert(String w){
-        if(root=null)
-            root=new TreeNode(new WordFrequency(w,1));
+        if(head==null)
+            head=new TreeNode(new WordFrequency(w,1));
             NumDistinctWords++;
 
-        TreeNode current=root;
+        TreeNode current=head;
 
         while(true){
             if(current.getItem().key()==w){
@@ -50,7 +59,7 @@ public class BST implements WordCounter{
             }
 
 
-            if(current.getItem().key().compare(w)<0){
+            if(current.getItem().key().compareTo(w)<0){
                 if(current.getRight()==null){
                     current.setRight(new TreeNode(new WordFrequency(w,1)));
                     NumDistinctWords++;
@@ -78,10 +87,23 @@ public class BST implements WordCounter{
 
     public WordFrequency search(String w){
 
+
+        TreeNode current=head;
+        while(true){
+            if(current==null)
+                return new WordFrequency(w,0);
+            if(current.getItem().key().equals(w))
+                return current.getItem();
+            if(current.getItem().key().compareTo(w)<0)
+                current.getRight();
+            else
+                current=current.getLeft();
+        }
+
     }
 
     public void remove(String w){
-        TreeNode current =root;
+        TreeNode current =head;
         TreeNode parent=null;
 
         while(true){
@@ -91,7 +113,7 @@ public class BST implements WordCounter{
                 break;
             parent=current;
 
-            if(current.getItem().key().compare(w)<0)
+            if(current.getItem().key().compareTo(w)<0)
                 current=current.getRight();
             else
                 current=current.getLeft();
@@ -103,15 +125,80 @@ public class BST implements WordCounter{
         if(current.getLeft()==null)
             replace=current.getRight();
 
+        else if(current.getRight()==null){
+            replace=current.getLeft();
+        }
+
+        else{
+            TreeNode findCurrent = current.getRight();
+
+
+        }
+
     }
 
-    public int getNumDistinctWords(){
-        return NumDistinctWords;
+    public void load(String filename) throws FileNotFoundException{
+        File my_file=new File(filename);
+        Scanner file_scanner=new Scanner(my_file);
+        StringBuilder sb=new StringBuilder("");
+
+        for(String s:stopWords){
+            sb.append(s+"|");
+        }
+
+
+
+        while(file_scanner.hasNextLine()){
+            String my_line=file_scanner.nextLine();
+            Scanner linescanner = new Scanner(my_line);
+
+
+            while(linescanner.hasNext()){
+                String s=linescanner.next();
+                if(s.matches(sb.toString())){
+                    continue;
+                }
+
+                else{
+                    insert(s);
+                }
+            }
+        }
+
+
+
+    }
+    public int getNumDistinctWords() {
+
+        int result = 0;
+
+        Stack<TreeNode> stack = new Stack<TreeNode>();
+        TreeNode current = head;
+
+        while (current != null || !stack.isEmpty()) {
+            while (current != null) {
+                stack.push(current);
+                current = current.getLeft();
+
+            }
+            current = stack.pop();
+            result += current.getItem().getFrequency();
+            current = current.getRight();
+        }
+
+
+        return result;
+
+
     }
 
+
+    public int getNumTotalWords(){
+        return 0;
+    }
     public int getFrequency(String w){
 
-        TreeNode current=root;
+        TreeNode current=head;
 
         while(true){
             if(current==null)
@@ -119,7 +206,7 @@ public class BST implements WordCounter{
             if(current.getItem().key().equals(w))
                 return current.getItem().getFrequency();
 
-            if(current.getItem().key().compare(w)<0)
+            if(current.getItem().key().compareTo(w)<0)
                 current=current.getRight();
             else
                 current=current.getLeft();
@@ -130,8 +217,8 @@ public class BST implements WordCounter{
     public WordFrequency getMaxFrequency() {
 
         Stack<TreeNode> stack =new Stack<>();
-        TreeNode current=root;
-        int max=-1;
+        TreeNode current=head;
+        WordFrequency max=new WordFrequency(null,-1);
 
         while(current!=null || !stack.isEmpty()){
             while(current!=null){
@@ -140,18 +227,20 @@ public class BST implements WordCounter{
             }
 
             current=stack.pop();
-            if(current.getItem().getFrequency()>max){
-                max=current.getItem().getFrequency();
+            if(current.getItem().getFrequency()>max.getFrequency()){
+                max=current.getItem();
             }
-            current.current.getRight();
+            current=current.getRight();
         }
+
+        return max;
 
     }
 
     public double getMeanFrequency(){
 
         Stack<TreeNode> stack=new Stack<>();
-        TreeNode current=root;
+        TreeNode current=head;
         int sum=0;
 
         while(current!=null || !stack.isEmpty()){
@@ -162,7 +251,7 @@ public class BST implements WordCounter{
 
             current=stack.pop();
             sum+=current.getItem().getFrequency();
-            current.current.getRight();
+            current.getRight();
         }
 
         double result= sum * 1.0 /getNumDistinctWords();
@@ -178,7 +267,20 @@ public class BST implements WordCounter{
 
 
     public void printTreeByWord(PrintStream stream){
-        if()
+            Stack<TreeNode> stack=new Stack<TreeNode>();
+            TreeNode current=head;
+
+            while(current!=null || !stack.isEmpty()){
+                while(current!=null){
+                    stack.push(current);
+                    current=current.getLeft();
+                }
+                current=stack.pop();
+                stream.println(current.getItem().toString());
+
+                current=current.getRight();
+            }
+
     }
 
     public void addStopWord(String w){
@@ -189,7 +291,9 @@ public class BST implements WordCounter{
         stopWords.remove(w);
     }
 
-    private  static TreeNode
+
+
+
 
 
 

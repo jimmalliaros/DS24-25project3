@@ -1,3 +1,5 @@
+import java.io.PrintStream;
+
 public interface WordCounter {
     void insert(String w);
 
@@ -23,6 +25,6 @@ public interface WordCounter {
 
     void printTreeByWord(PrintStream steam);
 
-    void printTreeByFrequency(PrintSteam stream);
+    void printTreeByFrequency(PrintStream stream);
 
 }
